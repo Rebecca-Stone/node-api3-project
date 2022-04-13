@@ -31,15 +31,22 @@ function validateUser(req, res, next) {
 }
 
 //--- validatePost() ---
-// function validatePost(req, res, next) {
-// DO YOUR MAGIC
-// validatePost validates the body on a request to create a new post
-// ~if the request body lacks the required text field, respond with status 400 and { message: "missing required text field" }
-// }
+function validatePost(req, res, next) {
+  // DO YOUR MAGIC
+  // validatePost validates the body on a request to create a new post
+  // ~if the request body lacks the required text field, respond with status 400 and { message: }
+  let { text } = req.body;
+
+  if (!text) {
+    res.status(400).json({ message: "missing required text field" });
+    return;
+  }
+  next();
+}
 
 module.exports = {
   logger,
   validateUserId,
   validateUser,
-  // validatePost,
+  validatePost,
 };

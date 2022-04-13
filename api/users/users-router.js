@@ -1,12 +1,12 @@
 const express = require("express");
 const Users = require("./users-model");
-// const Posts = require("../posts/posts-model");
+const Posts = require("../posts/posts-model");
 // The middleware functions also need to be required
 const {
   logger,
   validateUserId,
   validateUser,
-  // validatePost,
+  validatePost,
 } = require("../middleware/middleware");
 
 const router = express.Router();
@@ -58,6 +58,8 @@ router.delete("/:id", logger, validateUserId, (req, res) => {
 });
 
 router.get("/:id/posts", logger, validateUserId, (req, res) => {
+  // RETURN THE ARRAY OF USER POSTS
+  // this needs a middleware to verify user id
   Users.getUserPosts(req.params.id)
     .then((posts) => {
       res.status(200).json(posts);
@@ -67,10 +69,19 @@ router.get("/:id/posts", logger, validateUserId, (req, res) => {
     });
 });
 
-// router.post("/:id/posts", (req, res) => {
-// RETURN THE NEWLY CREATED USER POST
-// this needs a middleware to verify user id
-// and another middleware to check that the request body is valid
-// });
+router.post("/:id/posts", validateUserId, validatePost, (req, res) => {
+  // RETURN THE NEWLY CREATED USER POST
+  // this needs a middleware to verify user id
+  // and another middleware to check that the request body is valid
+  const postInfo = { ...req.body, user_id: req.params.id };
+
+  Posts.insert(postInfo)
+    .then((post) => {
+      res.status(201).json(post);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+});
 
 module.exports = router;
