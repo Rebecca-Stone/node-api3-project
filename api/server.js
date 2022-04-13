@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require("express");
 const userRouter = require("./users/users-router");
 
 const server = express();
@@ -8,7 +8,7 @@ server.use(express.json());
 // global middleware and the user's router need to be connected here
 server.use("/api/users", userRouter);
 
-server.get('/', (req, res) => {
+server.get("/", (req, res) => {
   res.send(`<h2>Let's write some middleware!</h2>`);
 });
 
