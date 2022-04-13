@@ -30,11 +30,7 @@ function validateUser(req, res, next) {
   next();
 }
 
-//--- validatePost() ---
 function validatePost(req, res, next) {
-  // DO YOUR MAGIC
-  // validatePost validates the body on a request to create a new post
-  // ~if the request body lacks the required text field, respond with status 400 and { message: }
   let { text } = req.body;
 
   if (!text) {
