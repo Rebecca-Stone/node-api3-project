@@ -1,11 +1,14 @@
 const Users = require("../users/users-model");
 
-//--- logger() ---
-// this middleware runs on every request made to the API
-// function logger(req, res, next) {
-// DO YOUR MAGIC
-// logger logs to the console the following information about each request: request method, request url, and a timestamp
-// }
+function logger(req, res, next) {
+  req.timestamp = new Date();
+  console.log(`
+  METHOD: ${req.method}, 
+  URL: ${req.baseUrl}, 
+  TS: ${req.timestamp}
+  `);
+  next();
+}
 
 function validateUserId(req, res, next) {
   Users.getById(req.params.id).then((user) => {
@@ -35,7 +38,7 @@ function validateUser(req, res, next) {
 // }
 
 module.exports = {
-  // logger,
+  logger,
   validateUserId,
   validateUser,
   // validatePost,

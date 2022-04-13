@@ -1,10 +1,9 @@
 const express = require("express");
-// You will need `users-model.js` and `posts-model.js` both
 const Users = require("./users-model");
 // const Posts = require("../posts/posts-model");
 // The middleware functions also need to be required
 const {
-  // logger,
+  logger,
   validateUserId,
   validateUser,
   // validatePost,
@@ -13,10 +12,10 @@ const {
 const router = express.Router();
 
 function rootGetHandler(req, res) {
-  console.log(req.timestamp);
+  // console.log(req.timestamp);
   Users.get(req.query)
     .then((users) => {
-      console.log(users);
+      // console.log(users);
       res.status(200).json(users);
     })
     .catch((error) => {
@@ -24,13 +23,13 @@ function rootGetHandler(req, res) {
     });
 }
 
-router.get("/", rootGetHandler);
+router.get("/", logger,rootGetHandler);
 
-router.get("/:id", validateUserId, (req, res) => {
+router.get("/:id", logger, validateUserId, (req, res) => {
   res.json(req.existingUser);
 });
 
-router.post("/", validateUser, (req, res) => {
+router.post("/", logger, validateUser, (req, res) => {
   Users.insert(req.user)
     .then((user) => {
       res.status(201).json(user);
@@ -40,7 +39,7 @@ router.post("/", validateUser, (req, res) => {
     });
 });
 
-router.put("/:id", validateUser, validateUserId, (req, res) => {
+router.put("/:id", logger, validateUser, validateUserId, (req, res) => {
   Users.update(req.params.id, req.user)
     .then(() => {
       res.status(200).json({ ...req.existingUser, ...req.user });
@@ -50,7 +49,7 @@ router.put("/:id", validateUser, validateUserId, (req, res) => {
     });
 });
 
-router.delete("/:id", validateUserId, (req, res) => {
+router.delete("/:id", logger, validateUserId, (req, res) => {
   Users.remove(req.existingUser.id)
     .then(() => {
       res.status(200).json(req.existingUser);
