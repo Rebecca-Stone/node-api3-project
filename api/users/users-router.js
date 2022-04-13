@@ -12,10 +12,8 @@ const {
 const router = express.Router();
 
 function rootGetHandler(req, res) {
-  // console.log(req.timestamp);
   Users.get(req.query)
     .then((users) => {
-      // console.log(users);
       res.status(200).json(users);
     })
     .catch((error) => {
@@ -23,7 +21,7 @@ function rootGetHandler(req, res) {
     });
 }
 
-router.get("/", logger,rootGetHandler);
+router.get("/", logger, rootGetHandler);
 
 router.get("/:id", logger, validateUserId, (req, res) => {
   res.json(req.existingUser);
@@ -59,10 +57,15 @@ router.delete("/:id", logger, validateUserId, (req, res) => {
     });
 });
 
-// router.get("/:id/posts", (req, res) => {
-// RETURN THE ARRAY OF USER POSTS
-// this needs a middleware to verify user id
-// });
+router.get("/:id/posts", logger, validateUserId, (req, res) => {
+  Users.getUserPosts(req.params.id)
+    .then((posts) => {
+      res.status(200).json(posts);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+});
 
 // router.post("/:id/posts", (req, res) => {
 // RETURN THE NEWLY CREATED USER POST
@@ -70,5 +73,4 @@ router.delete("/:id", logger, validateUserId, (req, res) => {
 // and another middleware to check that the request body is valid
 // });
 
-// do not forget to export the router
 module.exports = router;
